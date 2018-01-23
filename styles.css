@@ -1,0 +1,19 @@
+body {
+	background-color: lightblue;
+}
+
+.parkinglot {
+	position: absolute;
+	z-index: 1;
+	width: 1035px;
+	height: 1385px;
+
+}
+
+.car-aqua {
+	position: absolute;
+	z-index: 2;
+	transform: rotate(-90deg);
+	border: 1px solid black;
+	top: 1034;
+}
