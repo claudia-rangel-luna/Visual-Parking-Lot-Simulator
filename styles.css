@@ -5,17 +5,17 @@ body {
 .parkinglot {
 	position: absolute;
 	z-index: 1;
-	width: 1385px;
+	/*width: 1385px;
 	height: 1035px;
-
+*/
+	height: 100vh;
 }
 
 .car-aqua {
 	position: absolute;
 	z-index: 2;
-	transform: rotate(-90deg);
+	transform: rotate(90deg);
 	border: 1px solid black;
-	top: 995px;
-	left: 380px;
-
+	top: 85px;
+	left: 820px;
 }
