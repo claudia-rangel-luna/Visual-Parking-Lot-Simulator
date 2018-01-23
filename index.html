@@ -14,7 +14,64 @@
 
 	
 	<script type="text/javascript">
+		function Space (top, left, width, height, orientation, openingDirection){
+			this.top = top;
+			this.left= left;
+			this.width = width;
+			this.height = height;
+			this.orientation = orientation;
+			this.openingDirection = openingDirection;
+			this.projection = calculateProjection();
+			
+			function calculateProjection (){
+				// use orientation and openingDirection to calculate the projection top, left, width, height.
+
+			}
+		}
+
+
+		var spaces = [
+			// left group of spaces
+			new Space(15, 12, 200, 110),
+			new Space(125, 12, 200, 110),
+			new Space(235, 12, 200, 110),
+			new Space(345, 12, 200, 110),
+			new Space(455, 12, 200, 110),
+			new Space(565, 12, 200, 110),
+			new Space(675, 12, 200, 110),
+			new Space(785, 12, 200, 110),
+			new Space(995, 12, 200, 110),
+			//right group of spaces
+			new Space(15, 1164, 200, 110),
+			new Space(125, 1164, 200, 110),
+			new Space(235, 1164, 200, 110),
+			new Space(345, 1164, 200, 110),
+			new Space(455, 1164, 200, 110),
+			new Space(565, 1164, 200, 110),
+			new Space(675, 1164, 200, 110),
+			new Space(785, 1164, 200, 110),
+			// new Space(995, 1164, 200, 110),
+			//middle section bottom group of spaces
+			new Space(810, 415, 200, 110),
+			new Space(810, 415, 200, 110),
+			new Space(810, 415, 200, 110),
+			new Space(810, 415, 200, 110),
+			new Space(810, 415, 200, 110),
+			//middle section middle group of spaces
+			new Space(419, 415, 200, 110),
+			new Space(419, 415, 200, 110),
+			new Space(419, 415, 200, 110),
+			new Space(419, 415, 200, 110),
+			new Space(419, 415, 200, 110),
+			//middle section top group of spaces
+			// new Space(22, 415, 200, 110),
+			new Space(22, 415, 200, 110),
+			new Space(22, 415, 200, 110),
+			new Space(22, 415, 200, 110),
+			new Space(22, 415, 200, 110),
+		];
 		
+
 
 	</script>
 </body>
