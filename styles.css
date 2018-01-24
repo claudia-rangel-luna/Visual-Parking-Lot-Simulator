@@ -14,8 +14,8 @@ body {
 .car-aqua {
 	position: absolute;
 	z-index: 2;
-	transform: rotate(90deg);
+	transform: rotate(-90deg);
 	border: 1px solid black;
-	top: 85px;
-	left: 820px;
+	top: 1090px;
+	left: 210px;
 }

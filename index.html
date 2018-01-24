@@ -15,123 +15,134 @@
 	
 	<script type="text/javascript">
 		var car1 = document.getElementsByClassName('car-aqua');
+		
 
-		var collectionOfCars = ['car-blue.png', 'car-dragon.png', 'car-green.png', 'car-grey.png', 'car-hot-pink.png', 'car-lime-green.png', 'car-orange.png', 'car-pink.png', 'car-purple.png', 'car-red-stripes.png', 'car-red.png', 'car-white.png', 'car-yellow.png'];
 
+		var carImages = ['car-blue.png', 'car-dragon.png', 'car-green.png', 'car-grey.png', 'car-hot-pink.png', 'car-lime-green.png', 'car-orange.png', 'car-pink.png', 'car-purple.png', 'car-red-stripes.png', 'car-red.png', 'car-white.png', 'car-yellow.png'];
 
-		var spaces = [
+		function Car(image){
+			this.image = image;
+		}
+
+		function Space (top, left, width, height, openingDirection){
+			this.top = top;
+			this.left= left;
+			this.width = width;
+			this.height = height;
+			this.openingDirection = openingDirection;
+
+			function calculateProjection (top, left, width, height, openingDirection){
+				// use orientation and openingDirection to calculate the projection top, left, width, height.
+				if(openingDirection === 'right'){
+					return { 
+						top: top,
+						left: left + width,
+						width: width,
+						height: height
+					};
+				}
+				else if(openingDirection === 'left'){
+					return { 
+						top: top,
+						left: left - width,
+						width: width,
+						height: height
+					};
+				}
+				else if(openingDirection === 'top'){
+					return { 
+						top: top - height,
+						left: left,
+						width: width,
+						height: height
+					};
+				}
+				else if (openingDirection === 'bottom'){
+					return { 
+						top: top + height,
+						left: left,
+						width: width,
+						height: height
+					};
+				}
+			}
+			this.projection = calculateProjection(top, left, width, height, openingDirection);
+		}
+		
+		var unusedSpaces = [
 			// left group of spaces
-			new Space(25, 20, 200, 110, 'landscape', 'left'),
-			new Space(140, 12, 200, 110, 'landscape', 'left'),
-			new Space(250, 12, 200, 110, 'landscape', 'left'),
-			new Space(360, 12, 200, 110, 'landscape', 'left'),
-			new Space(475, 12, 200, 110, 'landscape', 'left'),
-			new Space(580, 12, 200, 110, 'landscape', 'left'),
-			new Space(690, 12, 200, 110, 'landscape', 'left'),
-			new Space(805, 12, 200, 110, 'landscape', 'left'),
-			new Space(915, 12, 200, 110, 'landscape', 'left'),
+			new Space(25, 20, 200, 110, 'right'),
+			new Space(140, 12, 200, 110, 'right'),
+			new Space(250, 12, 200, 110, 'right'),
+			new Space(360, 12, 200, 110, 'right'),
+			new Space(475, 12, 200, 110, 'right'),
+			new Space(580, 12, 200, 110, 'right'),
+			new Space(690, 12, 200, 110, 'right'),
+			new Space(805, 12, 200, 110, 'right'),
+			new Space(915, 12, 200, 110, 'right'),
 			//right group of spaces
-			new Space(35, 1164, 200, 110, 'landscape', 'right'),
-			new Space(145, 1164, 200, 110, 'landscape', 'right'),
-			new Space(255, 1164, 200, 110, 'landscape', 'right'),
-			new Space(365, 1164, 200, 110, 'landscape', 'right'),
-			new Space(475, 1164, 200, 110, 'landscape', 'right'),
-			new Space(585, 1164, 200, 110, 'landscape', 'right'),
-			new Space(695, 1164, 200, 110, 'landscape', 'right'),
-			new Space(805, 1164, 200, 110, 'landscape', 'right'),
+			new Space(35, 1164, 200, 110, 'left'),
+			new Space(145, 1164, 200, 110, 'left'),
+			new Space(255, 1164, 200, 110, 'left'),
+			new Space(365, 1164, 200, 110, 'left'),
+			new Space(475, 1164, 200, 110, 'left'),
+			new Space(585, 1164, 200, 110, 'left'),
+			new Space(695, 1164, 200, 110, 'left'),
+			new Space(805, 1164, 200, 110, 'left'),
 			// new Space(915, 1164, 200, 110),
 			//middle section bottom group of spaces
-			new Space(860, 380, 200, 110, 'portrait', 'right'),
-			new Space(810, 490, 200, 110, 'portrait', 'right'),
-			new Space(810, 590, 200, 110, 'portrait', 'right'),
-			new Space(810, 705, 200, 110, 'portrait', 'right'),
-			new Space(810, 820, 200, 110, 'portrait', 'right'),
+			new Space(860, 380, 200, 110, 'top'),
+			new Space(810, 490, 200, 110, 'top'),
+			new Space(810, 590, 200, 110, 'top'),
+			new Space(810, 705, 200, 110, 'top'),
+			new Space(810, 820, 200, 110, 'top'),
 			//middle section middle group of spaces
-			new Space(470, 380, 200, 110, 'portrait', 'right'),
-			new Space(470, 490, 200, 110, 'portrait', 'right'),
-			new Space(470, 590, 200, 110, 'portrait', 'right'),
-			new Space(470, 705, 200, 110, 'portrait', 'right'),
-			new Space(470, 820, 200, 110, 'portrait', 'right'),
+			new Space(470, 380, 200, 110, 'top'),
+			new Space(470, 490, 200, 110, 'top'),
+			new Space(470, 590, 200, 110, 'top'),
+			new Space(470, 705, 200, 110, 'top'),
+			new Space(470, 820, 200, 110, 'top'),
 			//middle section top group of spaces
 			// new Space(22, 415, 200, 110),
-			new Space(85, 490, 200, 110, 'portrait', 'left'),
-			new Space(85,600, 200, 110, 'portrait', 'left'),
-			new Space(85, 715, 200, 110, 'portrait', 'left'),
-			new Space(85, 820, 200, 110, 'portrait', 'left'),
-		];
-		
-		var projection = [
-			//left side
-			new calculateProjection(15, 208, 210, 110),
-			new calculateProjection(125, 208, 210, 110),
-			new calculateProjection(235, 208, 210, 110),
-			new calculateProjection(345, 208, 210, 110),
-			new calculateProjection(455, 208, 210, 110),
-			new calculateProjection(565, 208, 210, 110),
-			new calculateProjection(675, 208, 210, 110),
-			new calculateProjection(785, 208, 210, 110),
-			new calculateProjection(995, 208, 210, 110),
-			//right side
-			new calculateProjection(20, 984, 179, 104),
-			new calculateProjection(122, 984, 179, 104),
-			new calculateProjection(223, 984, 179, 104),
-			new calculateProjection(325, 984, 179, 104),
-			new calculateProjection(426, 984, 179, 104),
-			new calculateProjection(528, 984, 179, 104),
-			new calculateProjection(630, 984, 179, 104),
-			new calculateProjection(732, 984, 179, 104),
-			// new calculateProjection(837, 984, 179, 104);
-			//middle top section 
-			// new calculateProjection(222, 419, 110, 193);
-			new calculateProjection(222, 528, 110, 193),
-			new calculateProjection(222, 638, 110, 193),
-			new calculateProjection(222, 748, 110, 193),
-			new calculateProjection(222, 858, 110, 193),
-			//middle bottom section
-			new calculateProjection(617, 417, 110, 193),
-			new calculateProjection(617, 527, 110, 193),
-			new calculateProjection(617, 637, 110, 193),
-			new calculateProjection(617, 747, 110, 193),
-			new calculateProjection(617, 857, 110, 193),
-
+			new Space(85, 490, 200, 110,'bottom'),
+			new Space(85, 600, 200, 110, 'bottom'),
+			new Space(85, 715, 200, 110, 'bottom'),
+			new Space(85, 820, 200, 110, 'bottom'),
 		];
 
 		//intersection coordinates
-		function Intersection(top, left, width, height){
+		function Intersection(top, left, width, height, outlets){
 			this.top = top;
 			this.left= left;
 			this.width = width;
 			this.height = height;
-		}		
+			this.outlets = outlets;
+		}	
 
-		//top-left intersection
-			var topLeftIntersection = new Intersection(205, 284, 190, 180);
-			//bottom-left intersection
-			var bottomLeftIntersection = new Intersection(571, 282, 189, 176);
-			//top-right intersection
-			var topRightIntersection = new calculateProjection(205, 984, 178, 178);
-			//bottom-left intersection
-			var bottomLeftIntersection = new calculateProjection(571, 984, 178, 178);
+		var intersections = [
+			new Intersection(220, 226, 193, 198, ['top', 'bottom', 'right']),
+			new Intersection(222, 968, 193, 198, ['top', 'bottom', 'left']),
+			new Intersection(616, 966, 193, 198, ['top', 'bottom', 'left']),
+			new Intersection(614, 223, 193, 198, ['top', 'bottom', 'right'])
+		]; 
 
-		function Space (top, left, width, height, orientation, openingDirection){
-			this.top = top;
-			this.left= left;
-			this.width = width;
-			this.height = height;
-			this.orientation = orientation;
-			this.openingDirection = openingDirection;
-			this.projection = calculateProjection();
+		var unparkedCars = [];
+		var parkedCars = [];
+		//loop for 100 unparked cars 
+		for(var i = 0; i < 100; i++){
+			var index = i % carImages.length;
+			var image = carImages[index];
+			unparkedCars.push(new Car(image));
 		}
 
-		function calculateProjection (top, left, width, height){
-				// use orientation and openingDirection to calculate the projection top, left, width, height.
-				this.top = top;
-				this.left = left;
-				this.width = width;
-				this.height = height;
-		}
-		
-		function carInitialPosition (){
+		var usedSpaces =[];
+		console.log(unusedSpaces);
+		console.log(usedSpaces);
+		console.log(intersections);
+		console.log(unparkedCars);
+		console.log(parkedCars);
+
+		function Entrance (){
 			top = '1090px';
 			left = '210px';
 			width = '200px';
