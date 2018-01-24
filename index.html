@@ -142,6 +142,32 @@
 		console.log(unparkedCars);
 		console.log(parkedCars);
 
+		//create a function car to park
+		// is there a car to park
+		// yes -- park ---> car = unparkedCars.shift(); ---> draw on screen {image, src, append, sets top/left } then ask if spot is available
+			//is there a car being parked 
+				//if yes return false
+				//else is there a car avialable to park 
+					//is unparkedCars.length > 0
+				//if yes return true
+				//if no return false
+		// no -- go back to sleep
+		function Attendant (){
+			if(unparkedCars.length >= 0 && unusedSpaces.length >= 0){
+				var car = unparkedCars.shift();
+				var space = unusedSpaces.shift();
+
+				parkedCars.push(car);
+				usedSpaces.push(space);
+
+				console.log("Car " + car.image + " has been parked");
+			}
+			else {
+				return;
+			}
+		}
+
+
 		function Entrance (){
 			top = '1090px';
 			left = '210px';
@@ -158,7 +184,11 @@
 			moveCarForward();
 			moveCarLeft();
 			moveCarRight();
+			Attendant();
+
 		}
+
+		var gameLoop = setInterval(Tick, 50);
 
 
 	</script>
