@@ -1,196 +1,254 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<title>Visual Parking Lot Simulator</title>
-	<link rel="stylesheet" type="text/css" href="styles.css">
+    <meta charset="UTF-8">
+    <title>Visual Parking Lot Simulator</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
+
 <body>
-	
-	
-		<img class="parkingLot " src="images/parkinglot.jpg"/>
-	
-		<img class="car-aqua" src="images/car-aqua.png">
-
-	
-	<script type="text/javascript">
-		var car1 = document.getElementsByClassName('car-aqua');
-		
+    <img class="parkingLot " src="images/parkinglot.jpg" />
+    <!-- <img class="car-aqua" src="images/car-aqua.png"> -->
+    <script type="text/javascript">
+    // var car1 = document.getElementsByClassName('car-aqua');
 
 
-		var carImages = ['car-blue.png', 'car-dragon.png', 'car-green.png', 'car-grey.png', 'car-hot-pink.png', 'car-lime-green.png', 'car-orange.png', 'car-pink.png', 'car-purple.png', 'car-red-stripes.png', 'car-red.png', 'car-white.png', 'car-yellow.png'];
 
-		function Car(image){
-			this.image = image;
-		}
+    var carImages = ['car-blue.png', 'car-dragon.png', 'car-green.png', 'car-grey.png', 'car-hot-pink.png', 'car-lime-green.png', 'car-orange.png', 'car-pink.png', 'car-purple.png', 'car-red-stripes.png', 'car-red.png', 'car-white.png', 'car-yellow.png'];
 
-		function Space (top, left, width, height, openingDirection){
-			this.top = top;
-			this.left= left;
-			this.width = width;
-			this.height = height;
-			this.openingDirection = openingDirection;
+    function Car(image) {
+        this.image = image;
+        this.space = null;
+    }
 
-			function calculateProjection (top, left, width, height, openingDirection){
-				// use orientation and openingDirection to calculate the projection top, left, width, height.
-				if(openingDirection === 'right'){
-					return { 
-						top: top,
-						left: left + width,
-						width: width,
-						height: height
-					};
-				}
-				else if(openingDirection === 'left'){
-					return { 
-						top: top,
-						left: left - width,
-						width: width,
-						height: height
-					};
-				}
-				else if(openingDirection === 'top'){
-					return { 
-						top: top - height,
-						left: left,
-						width: width,
-						height: height
-					};
-				}
-				else if (openingDirection === 'bottom'){
-					return { 
-						top: top + height,
-						left: left,
-						width: width,
-						height: height
-					};
-				}
-			}
-			this.projection = calculateProjection(top, left, width, height, openingDirection);
-		}
-		
-		var unusedSpaces = [
-			// left group of spaces
-			new Space(25, 20, 200, 110, 'right'),
-			new Space(140, 12, 200, 110, 'right'),
-			new Space(250, 12, 200, 110, 'right'),
-			new Space(360, 12, 200, 110, 'right'),
-			new Space(475, 12, 200, 110, 'right'),
-			new Space(580, 12, 200, 110, 'right'),
-			new Space(690, 12, 200, 110, 'right'),
-			new Space(805, 12, 200, 110, 'right'),
-			new Space(915, 12, 200, 110, 'right'),
-			//right group of spaces
-			new Space(35, 1164, 200, 110, 'left'),
-			new Space(145, 1164, 200, 110, 'left'),
-			new Space(255, 1164, 200, 110, 'left'),
-			new Space(365, 1164, 200, 110, 'left'),
-			new Space(475, 1164, 200, 110, 'left'),
-			new Space(585, 1164, 200, 110, 'left'),
-			new Space(695, 1164, 200, 110, 'left'),
-			new Space(805, 1164, 200, 110, 'left'),
-			// new Space(915, 1164, 200, 110),
-			//middle section bottom group of spaces
-			new Space(860, 380, 200, 110, 'top'),
-			new Space(810, 490, 200, 110, 'top'),
-			new Space(810, 590, 200, 110, 'top'),
-			new Space(810, 705, 200, 110, 'top'),
-			new Space(810, 820, 200, 110, 'top'),
-			//middle section middle group of spaces
-			new Space(470, 380, 200, 110, 'top'),
-			new Space(470, 490, 200, 110, 'top'),
-			new Space(470, 590, 200, 110, 'top'),
-			new Space(470, 705, 200, 110, 'top'),
-			new Space(470, 820, 200, 110, 'top'),
-			//middle section top group of spaces
-			// new Space(22, 415, 200, 110),
-			new Space(85, 490, 200, 110,'bottom'),
-			new Space(85, 600, 200, 110, 'bottom'),
-			new Space(85, 715, 200, 110, 'bottom'),
-			new Space(85, 820, 200, 110, 'bottom'),
-		];
+    function Space(top, left, width, height, openingDirection) {
+        this.top = top;
+        this.left = left;
+        this.width = width;
+        this.height = height;
+        this.openingDirection = openingDirection;
 
-		//intersection coordinates
-		function Intersection(top, left, width, height, outlets){
-			this.top = top;
-			this.left= left;
-			this.width = width;
-			this.height = height;
-			this.outlets = outlets;
-		}	
+        function calculateProjection(top, left, width, height, openingDirection) {
+            // use orientation and openingDirection to calculate the projection top, left, width, height.
+            if (openingDirection === 'right') {
+                return {
+                    top: top,
+                    left: left + width,
+                    width: width,
+                    height: height
+                };
+            } else if (openingDirection === 'left') {
+                return {
+                    top: top,
+                    left: left - width,
+                    width: width,
+                    height: height
+                };
+            } else if (openingDirection === 'top') {
+                return {
+                    top: top - height,
+                    left: left,
+                    width: width,
+                    height: height
+                };
+            } else if (openingDirection === 'bottom') {
+                return {
+                    top: top + height,
+                    left: left,
+                    width: width,
+                    height: height
+                };
+            }
+        }
+        this.projection = calculateProjection(top, left, width, height, openingDirection);
+    }
 
-		var intersections = [
-			new Intersection(220, 226, 193, 198, ['top', 'bottom', 'right']),
-			new Intersection(222, 968, 193, 198, ['top', 'bottom', 'left']),
-			new Intersection(616, 966, 193, 198, ['top', 'bottom', 'left']),
-			new Intersection(614, 223, 193, 198, ['top', 'bottom', 'right'])
-		]; 
+    function Opening(top, left, width) {
+        this.top = top;
+        this.left = left;
+        this.width = width;
+    }
 
-		var unparkedCars = [];
-		var parkedCars = [];
-		//loop for 100 unparked cars 
-		for(var i = 0; i < 100; i++){
-			var index = i % carImages.length;
-			var image = carImages[index];
-			unparkedCars.push(new Car(image));
-		}
+    var entrance = new Opening(1090, 120, 200);
 
-		var usedSpaces =[];
-		console.log(unusedSpaces);
-		console.log(usedSpaces);
-		console.log(intersections);
-		console.log(unparkedCars);
-		console.log(parkedCars);
+    var exit = new Opening(1090, 973, 187);
 
-		//create a function car to park
-		// is there a car to park
-		// yes -- park ---> car = unparkedCars.shift(); ---> draw on screen {image, src, append, sets top/left } then ask if spot is available
-			//is there a car being parked 
-				//if yes return false
-				//else is there a car avialable to park 
-					//is unparkedCars.length > 0
-				//if yes return true
-				//if no return false
-		// no -- go back to sleep
-		function Attendant (){
-			if(unparkedCars.length >= 0 && unusedSpaces.length >= 0){
-				var car = unparkedCars.shift();
-				var space = unusedSpaces.shift();
+    var unusedSpaces = [
+        // left group of spaces
+        new Space(25, 20, 200, 110, 'right'),
+        new Space(140, 12, 200, 110, 'right'),
+        new Space(250, 12, 200, 110, 'right'),
+        new Space(360, 12, 200, 110, 'right'),
+        new Space(475, 12, 200, 110, 'right'),
+        new Space(580, 12, 200, 110, 'right'),
+        new Space(690, 12, 200, 110, 'right'),
+        new Space(805, 12, 200, 110, 'right'),
+        new Space(915, 12, 200, 110, 'right'),
+        //right group of spaces
+        new Space(35, 1164, 200, 110, 'left'),
+        new Space(145, 1164, 200, 110, 'left'),
+        new Space(255, 1164, 200, 110, 'left'),
+        new Space(365, 1164, 200, 110, 'left'),
+        new Space(475, 1164, 200, 110, 'left'),
+        new Space(585, 1164, 200, 110, 'left'),
+        new Space(695, 1164, 200, 110, 'left'),
+        new Space(805, 1164, 200, 110, 'left'),
+        // new Space(915, 1164, 200, 110),
+        //middle section bottom group of spaces
+        new Space(860, 380, 200, 110, 'top'),
+        new Space(810, 490, 200, 110, 'top'),
+        new Space(810, 590, 200, 110, 'top'),
+        new Space(810, 705, 200, 110, 'top'),
+        new Space(810, 820, 200, 110, 'top'),
+        //middle section middle group of spaces
+        new Space(470, 380, 200, 110, 'top'),
+        new Space(470, 490, 200, 110, 'top'),
+        new Space(470, 590, 200, 110, 'top'),
+        new Space(470, 705, 200, 110, 'top'),
+        new Space(470, 820, 200, 110, 'top'),
+        //middle section top group of spaces
+        // new Space(22, 415, 200, 110),
+        new Space(85, 490, 200, 110, 'bottom'),
+        new Space(85, 600, 200, 110, 'bottom'),
+        new Space(85, 715, 200, 110, 'bottom'),
+        new Space(85, 820, 200, 110, 'bottom'),
+    ];
 
-				parkedCars.push(car);
-				usedSpaces.push(space);
+    //intersection coordinates
+    function Intersection(top, left, width, height, outlets) {
+        this.top = top;
+        this.left = left;
+        this.width = width;
+        this.height = height;
+        this.outlets = outlets;
+    }
 
-				console.log("Car " + car.image + " has been parked");
-			}
-			else {
-				return;
-			}
-		}
+    var intersections = [
+        new Intersection(220, 226, 193, 198, ['top', 'bottom', 'right']),
+        new Intersection(222, 968, 193, 198, ['top', 'bottom', 'left']),
+        new Intersection(616, 966, 193, 198, ['top', 'bottom', 'left']),
+        new Intersection(614, 223, 193, 198, ['top', 'bottom', 'right'])
+    ];
+
+    var unparkedCars = [];
+    var parkedCars = [];
+    var carOnTheRoad = null;
+    var carAtEntrance = null;
 
 
-		function Entrance (){
-			top = '1090px';
-			left = '210px';
-			width = '200px';
-		}
+    //loop for 100 unparked cars 
+    for (var i = 0; i < 100; i++) {
+        var index = i % carImages.length;
+        var image = carImages[index];
+        unparkedCars.push(new Car(image));
+    }
 
-		function Exit(){
-			top = '1090px';
-			left = '973px';
-			width = '187px';
-		}
-
-		function Tick(){
-			moveCarForward();
-			moveCarLeft();
-			moveCarRight();
-			Attendant();
-
-		}
-
-		var gameLoop = setInterval(Tick, 50);
+    var usedSpaces = [];
+    console.log(unusedSpaces);
+    console.log(usedSpaces);
+    console.log(intersections);
+    console.log(unparkedCars);
+    console.log(parkedCars);
 
 
-	</script>
+    // yes -- park ---> car = unparkedCars.shift(); ---> draw on screen {image, src, append, sets top/left } then ask if spot is available
+    //is there a car being parked 
+    //if yes return false
+    //else is there a car avialable to park 
+    //is unparkedCars.length > 0
+    //if yes return true
+    //if no return false
+    // no -- go back to sleep
+
+    function getACarToPark() {
+    	return null; //remove this to try out code
+    	 console.log("looking for car to park");
+        //is the car on the road 
+        if (carOnTheRoad !== null) {
+            return carOnTheRoad;
+        }
+        //if not is the car at the entry point 
+        if (carAtEntrance !== null) {
+            return carAtEntrance;
+        }
+        //if not is the car on the array 
+        if (unparkedCars.length > 0) {
+            return unparkedCars.shift();
+        }
+        //if no car found, return null
+        return null;
+    }
+
+    function drawCarAtEntryPoint(car) {
+        var image = document.createElement('img');
+        image.setAttribute('src', 'images/' + car.image);
+        image.setAttribute('class', 'car');
+        document.body.appendChild(image);
+        moveCarToEntryPoint(image);
+        console.log('car created');
+    }
+
+    function moveCarToEntryPoint(car) {
+        // var carStyleLeft = getComputedStyle(car).left.replace('px', '');
+        // var carStyleTop = getComputedStyle(car).top.replace('px', '');
+        var padding = (entrance.width - car.width) / 2;
+        car.style.left = (entrance.left + padding) + 'px';
+        car.style.top = (entrance.top ) + 'px';
+        car.style.transform = 'rotate(-90deg)';
+    }
+
+    function getAvailableSpace() {
+        //is car driving to space if yes return the space assigned to the car 
+        if (carOnTheRoad !== null) {
+            //if yes return the space
+            return carOnTheRoad.space;
+
+        }
+        //if not is there a space available if yes return next space if not return null
+        if (unusedSpaces.length > 0) {
+            return unusedSpaces.shift();
+        }
+        return null;
+    }
+
+    console.log("Is there a space to park?");
+
+
+    function driveCarToSpace(car, space) {
+    	//already driving to a space 
+    	if(car === carOnTheRoad){
+    		
+    		//determine whats the next move? do I move fwd, left,right, at intersection?
+    		return;
+    	}
+    	//at the entrance start driving 
+    	if(car === carAtEntrance){
+    		//move forward
+    		return;
+    	}
+    	//out of the array get to entrance 
+    	drawCarAtEntryPoint(car);
+    	carAtEntrance = car;
+        console.log("parking the car at designated space");
+    }
+
+    function Tick() {
+        var car = getACarToPark();
+
+        if (car !== null) {
+            var space = getAvailableSpace();
+            if (space !== null) {
+                driveCarToSpace(car, space);
+            }
+        } else {
+            clearInterval(intervalId);
+            console.log("Done parking cars");
+        }
+    }
+
+    var intervalId = setInterval(Tick, 500);
+    </script>
 </body>
+
 </html>
