@@ -20,6 +20,8 @@
     function Car(image) {
         this.image = image;
         this.space = null;
+        this.element = null;
+        this.direction = null;
     }
 
     function Space(top, left, width, height, openingDirection) {
@@ -131,6 +133,12 @@
         new Intersection(614, 223, 193, 198, ['top', 'bottom', 'right'])
     ];
 
+    var intersectionWait = 500;
+    var roadSpeed = 10;
+    var intersectionSpeed = 100;
+
+    var IntervalId;
+
     var unparkedCars = [];
     var parkedCars = [];
     var carOnTheRoad = null;
@@ -151,64 +159,65 @@
     console.log(unparkedCars);
     console.log(parkedCars);
 
-
-    // yes -- park ---> car = unparkedCars.shift(); ---> draw on screen {image, src, append, sets top/left } then ask if spot is available
-    //is there a car being parked 
-    //if yes return false
-    //else is there a car avialable to park 
-    //is unparkedCars.length > 0
-    //if yes return true
-    //if no return false
-    // no -- go back to sleep
-
     function getACarToPark() {
-    	return null; //remove this to try out code
-    	 console.log("looking for car to park");
+        console.log("looking for car to park");
+
         //is the car on the road 
         if (carOnTheRoad !== null) {
+            console.log('found car on the road');
             return carOnTheRoad;
         }
+
         //if not is the car at the entry point 
         if (carAtEntrance !== null) {
+            console.log('found car at the entrance');
             return carAtEntrance;
         }
-        //if not is the car on the array 
+
+        // if not is the car on the array 
         if (unparkedCars.length > 0) {
+            console.log('found unparked car');
             return unparkedCars.shift();
         }
-        //if no car found, return null
+
+        // if no car found, return null
+        console.log('did not find car');
         return null;
     }
 
     function drawCarAtEntryPoint(car) {
-        var image = document.createElement('img');
-        image.setAttribute('src', 'images/' + car.image);
-        image.setAttribute('class', 'car');
-        document.body.appendChild(image);
-        moveCarToEntryPoint(image);
+        var carImage = document.createElement('img');
+        carImage.setAttribute('src', 'images/' + car.image);
+        carImage.setAttribute('class', 'car');
+        document.body.appendChild(carImage);
+
+        car.element = carImage;
+
+        moveCarToEntryPoint(carImage);
         console.log('car created');
     }
 
-    function moveCarToEntryPoint(car) {
-        // var carStyleLeft = getComputedStyle(car).left.replace('px', '');
-        // var carStyleTop = getComputedStyle(car).top.replace('px', '');
-        var padding = (entrance.width - car.width) / 2;
-        car.style.left = (entrance.left + padding) + 'px';
-        car.style.top = (entrance.top ) + 'px';
-        car.style.transform = 'rotate(-90deg)';
+    function moveCarToEntryPoint(carImage) {
+        var padding = (entrance.width - carImage.width) / 2;
+        carImage.style.left = (entrance.left + padding) + 'px';
+        carImage.style.top = (entrance.top) + 'px';
+        carImage.style.transform = 'rotate(-90deg)';
+        carImage.direction = 'up';
     }
 
     function getAvailableSpace() {
-        //is car driving to space if yes return the space assigned to the car 
+        // is car driving to space if yes return the space assigned to the car 
         if (carOnTheRoad !== null) {
             //if yes return the space
             return carOnTheRoad.space;
 
         }
-        //if not is there a space available if yes return next space if not return null
+
+        // if not is there a space available if yes return next space if not return null
         if (unusedSpaces.length > 0) {
             return unusedSpaces.shift();
         }
+
         return null;
     }
 
@@ -216,21 +225,144 @@
 
 
     function driveCarToSpace(car, space) {
-    	//already driving to a space 
-    	if(car === carOnTheRoad){
-    		
-    		//determine whats the next move? do I move fwd, left,right, at intersection?
-    		return;
-    	}
-    	//at the entrance start driving 
-    	if(car === carAtEntrance){
-    		//move forward
-    		return;
-    	}
-    	//out of the array get to entrance 
-    	drawCarAtEntryPoint(car);
-    	carAtEntrance = car;
-        console.log("parking the car at designated space");
+        // already driving to a space 
+        car.space = space;
+
+        if (car === carOnTheRoad) {
+            continueDriving(car);
+            return;
+        }
+
+        // at the entrance start driving 
+        if (car === carAtEntrance) {
+            //move forward
+            driveForward(car);
+            carAtEntrance = null;
+            carOnTheRoad = car;
+            return;
+        }
+
+        // out of the array get to entrance 
+        drawCarAtEntryPoint(car);
+        carAtEntrance = car;
+
+        console.log("place car at entry");
+    }
+
+    function driveForward(car) {
+        console.log('should be driving forward');
+        car.element.style.top = `${parseInt(car.element.style.top.replace("px", "")) - 10}px`;
+    }
+
+    function continueDriving(car) {
+        //determine whats the next step? forward, left, right, turn into space
+        console.log('continue to drive towards assigned space');
+        var isAtSpace = isCarAtSpace(car);
+        if (isAtSpace === true) {
+            console.log('parking the car');
+            parkTheCar(car);
+
+            return;
+        }
+
+        var intersection = isCarAtIntersection(car);
+        if (intersection !== null) {
+            //is space forward, left or right
+            var direction = whereIsTheSpaceForTheCar(car);
+            if (direction === "forward") {
+                driveForward(car);
+
+            } else if (direction === "left") {
+                turnLeft(car, intersection);
+            } else if (direction === "right") {
+                turnRight(car, intersection);
+            }
+
+            console.log('car is at intersection');
+        }
+
+        driveForward(car);
+    }
+
+    function isCarAtSpace(car) {
+        return false;
+    }
+
+    function parkTheCar(car) {
+        //once car is parked, 
+        return unparkedCars.shift();
+    }
+
+    function whereIsTheSpaceForTheCar(car) {
+        return "forward";
+    }
+
+    function isCarAtIntersection(car) {
+        return null;
+    }
+
+    function turnLeft(car, intersection) {
+        console.log('car should turn left at intersection');
+        turnCarAtIntersectionToLeft(car, intersection);
+
+
+    }
+
+    function turnRight(car, intersection) {
+        console.log('car should turn right at intersection');
+        turnCarAtIntersectionToRight(car, intersection);
+        if (car.direction == "up") {
+            car.direction = "right";
+        } else if (car.direction == "right") {
+            car.direction = "down";
+        } else if (car.direction == "down") {
+            car.direction = "left";
+        } else if (car.direction == "left") {
+            car.direction = "up";
+        }
+    }
+
+    function turnCarAtIntersectionToLeft(car, intersection) {
+        var insideIntersection = isCarAllTheWayInsideIntersection(car, intersection);
+        if (insideIntersection === true) {
+            car.element.style.transform = 'rotate(180deg)';
+
+            if (car.direction == "up") {
+                car.direction = "left";
+                car.element.style.transform = 'rotate(180deg)';
+            } else if (car.direction == "right") {
+                car.direction = "up";
+                car.element.style.transform = 'rotate(-90deg)';
+            } else if (car.direction == "down") {
+                car.direction = "right";
+                car.element.style.transform = 'rotate(360deg)';
+            } else if (car.direction == "left") {
+                car.direction = "down";
+                car.element.style.transform = 'rotate(90deg)';
+            }
+        }
+    }
+
+    function turnCarAtIntersectionToRight(car, intersection) {
+        var insideIntersection = isCarAllTheWayInsideIntersection(car, intersection);
+
+        if (insideIntersection === true) {
+            car.element.style.transform = 'rotate(360deg)';
+
+            if (car.direction == "up") {
+                car.direction = "left";
+                car.element.style.transform = 'rotate(180deg)';
+            } else if (car.direction == "right") {
+                car.direction = "up";
+                car.element.style.transform = 'rotate(-90deg)';
+            } else if (car.direction == "down") {
+                car.direction = "right";
+                car.element.style.transform = 'rotate(360deg)';
+            } else if (car.direction == "left") {
+                car.direction = "down";
+                car.element.style.transform = 'rotate(90deg)';
+            }
+        }
     }
 
     function Tick() {
@@ -247,7 +379,7 @@
         }
     }
 
-    var intervalId = setInterval(Tick, 500);
+    var intervalId = setInterval(Tick, 50);
     </script>
 </body>
 
